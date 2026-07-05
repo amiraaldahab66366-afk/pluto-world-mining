@@ -131,7 +131,11 @@ export default function Admin() {
                           e.preventDefault()
                           try {
                             if (u.kyc_data.storage === 's3' && u.kyc_data.key) {
-                              const res = await fetch(`/api/object-url?key=${encodeURIComponent(u.kyc_data.key)}`, { headers: adminHeader() })
+                              const res = await fetch('/api/object-url', {
+                                method: 'POST',
+                                headers: { ...adminHeader(), 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ key: u.kyc_data.key })
+                              })
                               if (res.ok) {
                                 const data = await res.json()
                                 setModalUrl(data.url)

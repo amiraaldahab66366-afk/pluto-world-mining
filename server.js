@@ -150,8 +150,8 @@ app.post('/api/upload-url', express.json(), async (req, res) => {
 })
 
 // Admin-only: generate signed GET URL for private S3 objects
-app.get('/api/object-url', requireAdmin, async (req, res) => {
-  const key = req.query.key
+app.post('/api/object-url', express.json(), requireAdmin, async (req, res) => {
+  const key = req.body && req.body.key
   const bucket = process.env.AWS_S3_BUCKET
   const region = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION
   if (!key) return res.status(400).json({ error: 'missing_key' })
