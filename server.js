@@ -14,11 +14,12 @@ const multer = require('multer')
 let nodemailer
 try { nodemailer = require('nodemailer') } catch (e) { nodemailer = null }
 // optional AWS S3 presign support
-let s3Client, getSignedUrl, PutObjectCommand
+let s3Client, getSignedUrl, PutObjectCommand, GetObjectCommand
 try {
-  const { S3Client, PutObjectCommand: PutCmd } = require('@aws-sdk/client-s3')
+  const { S3Client, PutObjectCommand: PutCmd, GetObjectCommand: GetCmd } = require('@aws-sdk/client-s3')
   getSignedUrl = require('@aws-sdk/s3-request-presigner').getSignedUrl
   PutObjectCommand = PutCmd
+  GetObjectCommand = GetCmd
   // s3Client will be created lazily when env vars available
 } catch (e) {
   // AWS SDK not installed, presign endpoints will return 501
@@ -145,6 +146,24 @@ app.post('/api/upload-url', express.json(), async (req, res) => {
   } catch (e) {
     console.error('presign error', e)
     res.status(500).json({ error: 'presign_failed' })
+  }
+})
+
+// Admin-only: generate signed GET URL for private S3 objects
+app.get('/api/object-url', requireAdmin, async (req, res) => {
+  const key = req.query.key
+  const bucket = process.env.AWS_S3_BUCKET
+  const region = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION
+  if (!key) return res.status(400).json({ error: 'missing_key' })
+  if (!bucket || !region || !getSignedUrl || !GetObjectCommand) return res.status(501).json({ error: 's3_not_configured' })
+  try {
+    if (!s3Client) s3Client = new (require('@aws-sdk/client-s3').S3Client)({ region })
+    const cmd = new GetObjectCommand({ Bucket: bucket, Key: key })
+    const url = await getSignedUrl(s3Client, cmd, { expiresIn: 900 })
+    res.json({ url })
+  } catch (e) {
+    console.error('signed get error', e)
+    res.status(500).json({ error: 'sign_failed' })
   }
 })
 

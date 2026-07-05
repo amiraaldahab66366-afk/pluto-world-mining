@@ -126,7 +126,22 @@ export default function Admin() {
                   <div>
                     <strong>{u.email}</strong> — {u.full_name} — <em>{u.kyc_status}</em>
                     {u.kyc_data && u.kyc_data.uploaded && (
-                      <div><a href="#" onClick={(e) => { e.preventDefault(); setModalUrl(u.kyc_data.uploaded) }}>View document</a></div>
+                      <div>
+                        <a href="#" onClick={async (e) => {
+                          e.preventDefault()
+                          try {
+                            if (u.kyc_data.storage === 's3' && u.kyc_data.key) {
+                              const res = await fetch(`/api/object-url?key=${encodeURIComponent(u.kyc_data.key)}`, { headers: adminHeader() })
+                              if (res.ok) {
+                                const data = await res.json()
+                                setModalUrl(data.url)
+                                return
+                              }
+                            }
+                          } catch (err) { console.warn('signed url fetch failed', err) }
+                          setModalUrl(u.kyc_data.uploaded)
+                        }}>View document</a>
+                      </div>
                     )}
                     <div style={{ marginTop: 6, display: 'flex', gap: 8 }}>
                       {u.kyc_status !== 'verified' && <button onClick={() => setKyc(u.id, 'approve')}>Approve</button>}
