@@ -92,6 +92,14 @@ export default function App() {
     return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
+  const navItems = [
+    { path: '/', label: 'Markets' },
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/kyc', label: 'KYC' },
+    { path: '/withdraw', label: 'Withdraw' },
+    { path: '/admin', label: 'Admin' }
+  ]
+
   return (
     <div>
       <header>
@@ -102,11 +110,9 @@ export default function App() {
           </div>
           <div className="toolbar">
             <nav>
-              <a href="#/">Markets</a>
-              <a href="#/dashboard">Dashboard</a>
-              <a href="#/kyc">KYC</a>
-              <a href="#/withdraw">Withdraw</a>
-              <a href="#/admin">Admin</a>
+              {navItems.map(item => (
+                <a key={item.path} href={`#${item.path}`} className={route === item.path ? 'nav-link active' : 'nav-link'}>{item.label}</a>
+              ))}
             </nav>
             <div style={{ marginLeft: 12 }}>
               <button className="secondary" onClick={() => { const v = localStorage.getItem('isAdmin') === '1' ? '0' : '1'; localStorage.setItem('isAdmin', v); window.location.reload() }}>{localStorage.getItem('isAdmin') === '1' ? 'Admin: ON' : 'Admin: OFF'}</button>
