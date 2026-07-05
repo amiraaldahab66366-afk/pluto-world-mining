@@ -21,28 +21,30 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className="card">
-        <h1>Dashboard</h1>
-        <p className="muted">Quick marketplace overview</p>
-        <div className="stats" style={{ display: 'flex', gap: 20, marginTop: 12 }}>
-          <div className="card" style={{ padding: 12 }}>
+      <section className="card page-hero">
+        <div className="hero-copy">
+          <h1>Dashboard</h1>
+          <p className="muted">Quick marketplace overview</p>
+        </div>
+        <div className="summary-cards">
+          <div className="summary-card">
             <strong>{stats.count}</strong>
             <div className="muted">Total listings</div>
           </div>
-          <div className="card" style={{ padding: 12 }}>
+          <div className="summary-card">
             <strong>{stats.totalAmount}</strong>
             <div className="muted">Total amount</div>
           </div>
-          <div className="card" style={{ padding: 12 }}>
+          <div className="summary-card">
             <strong>${Number(stats.totalValue).toFixed(2)}</strong>
             <div className="muted">Total market value</div>
           </div>
         </div>
-      </div>
-      <div style={{ marginTop: 12 }} className="card">
+      </section>
+      <section className="card">
         <h2>Market Snapshot</h2>
         <p className="muted">Recent listings and market activity are shown on the Markets page.</p>
-      </div>
+      </section>
       <p className="muted">{status}</p>
     </div>
   )

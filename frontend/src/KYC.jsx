@@ -41,17 +41,17 @@ export default function KYC() {
   }
 
   return (
-    <div className="card">
+    <div className="card form-card">
       <h1>KYC Verification</h1>
       <p className="muted">Submit your basic details to verify your account.</p>
-      <form onSubmit={submit} style={{ marginTop: 12 }}>
+      <form onSubmit={submit}>
         <label>Email<input name="email" type="email" required /></label>
         <label>Full name<input name="full_name" required /></label>
         <label>ID number<input name="id_number" required /></label>
         <label>Upload ID document<input name="document" type="file" accept="image/*,application/pdf" /></label>
-        <button type="submit">Submit KYC</button>
+        <div className="form-actions"><button type="submit">Submit KYC</button></div>
       </form>
-      <p className="muted">{status}</p>
+      <p className="form-status muted">{status}</p>
     </div>
   )
 }

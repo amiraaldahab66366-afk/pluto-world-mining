@@ -19,16 +19,16 @@ export default function Withdraw() {
   }
 
   return (
-    <div className="card">
+    <div className="card form-card">
       <h1>Withdraw</h1>
       <p className="muted">Request a withdrawal to your external address.</p>
-      <form onSubmit={submit} style={{ marginTop: 12 }}>
+      <form onSubmit={submit}>
         <label>Email<input name="email" type="email" required /></label>
         <label>Amount<input name="amount" type="number" step="any" required /></label>
         <label>Destination address<input name="address" required /></label>
-        <button type="submit">Request Withdrawal</button>
+        <div className="form-actions"><button type="submit">Request Withdrawal</button></div>
       </form>
-      <p className="muted">{status}</p>
+      <p className="form-status muted">{status}</p>
     </div>
   )
 }
