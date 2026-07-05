@@ -5,14 +5,38 @@ export default function KYC() {
 
   async function submit(ev) {
     ev.preventDefault()
-    const fd = new FormData(ev.target)
-    // submit multipart including document
+    const form = ev.target
+    const fd = new FormData(form)
+    const file = form.document && form.document.files && form.document.files[0]
+    // Try presigned upload first
+    if (file) {
+      try {
+        const presign = await fetch('/api/upload-url', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: file.name, contentType: file.type }) })
+        if (presign.ok) {
+          const pj = await presign.json()
+          // upload file to S3 via PUT
+          await fetch(pj.url, { method: 'PUT', headers: { 'Content-Type': file.type }, body: file })
+          // submit kyc metadata pointing to S3 URL
+          const payload = { email: fd.get('email'), full_name: fd.get('full_name'), kyc_data: { uploaded: pj.uploaded, storage: 's3', key: pj.key } }
+          const res = await fetch('/api/kyc', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+          if (!res.ok) throw new Error('kyc submit failed')
+          setStatus('KYC submitted — document uploaded (via S3)')
+          form.reset()
+          return
+        }
+      } catch (e) {
+        // fall back to multipart below
+        console.warn('presign/upload failed, falling back to multipart', e)
+      }
+    }
+
+    // fallback to server-side multipart upload
     try {
       const res = await fetch('/api/kyc-upload', { method: 'POST', body: fd })
       if (!res.ok) throw new Error('failed')
       const data = await res.json()
       setStatus(data.uploaded ? 'KYC submitted — document uploaded' : 'KYC submitted — pending review')
-      ev.target.reset()
+      form.reset()
     } catch (e) { setStatus('Error submitting KYC') }
   }
 

@@ -13,6 +13,19 @@ const fs = require('fs')
 const multer = require('multer')
 let nodemailer
 try { nodemailer = require('nodemailer') } catch (e) { nodemailer = null }
+// optional AWS S3 presign support
+let s3Client, getSignedUrl, PutObjectCommand
+try {
+  const { S3Client, PutObjectCommand: PutCmd } = require('@aws-sdk/client-s3')
+  getSignedUrl = require('@aws-sdk/s3-request-presigner').getSignedUrl
+  PutObjectCommand = PutCmd
+  // s3Client will be created lazily when env vars available
+} catch (e) {
+  // AWS SDK not installed, presign endpoints will return 501
+  s3Client = null
+  getSignedUrl = null
+  PutObjectCommand = null
+}
 
 const db = new sqlite3.Database(DB_FILE, (err) => {
   if (err) console.error('Failed to open database:', err);
@@ -112,6 +125,27 @@ app.post('/api/kyc-upload', upload.single('document'), (req, res) => {
     })
   })
   stmt.finalize()
+})
+
+// Provide presigned S3 URL for direct uploads (optional). Expects JSON { filename, contentType }
+app.post('/api/upload-url', express.json(), async (req, res) => {
+  const { filename, contentType } = req.body || {}
+  const bucket = process.env.AWS_S3_BUCKET
+  const region = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION
+  if (!filename || !contentType) return res.status(400).json({ error: 'missing_params' })
+  if (!bucket || !region || !getSignedUrl || !PutObjectCommand) return res.status(501).json({ error: 's3_not_configured' })
+  try {
+    // create client if not created
+    if (!s3Client) s3Client = new (require('@aws-sdk/client-s3').S3Client)({ region })
+    const key = `kyc/${Date.now()}_${filename.replace(/[^a-z0-9-_.]/gi, '_')}`
+    const command = new PutObjectCommand({ Bucket: bucket, Key: key, ContentType: contentType, ACL: 'private' })
+    const url = await getSignedUrl(s3Client, command, { expiresIn: 900 })
+    const publicUrl = `https://${bucket}.s3.${region}.amazonaws.com/${key}`
+    res.json({ url, key, uploaded: publicUrl })
+  } catch (e) {
+    console.error('presign error', e)
+    res.status(500).json({ error: 'presign_failed' })
+  }
 })
 
 // email helper: uses nodemailer if configured, otherwise logs
