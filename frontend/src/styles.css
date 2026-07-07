@@ -1,0 +1,80 @@
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial; margin: 0; color: #222; background: linear-gradient(180deg,#f6f8fb,#ffffff); }
+* { box-sizing: border-box }
+header { background: linear-gradient(90deg,#0b3d91,#0366d6); color: white; padding: 20px 0; box-shadow: 0 2px 8px rgba(2,6,23,0.08) }
+header .container { max-width: 1000px; margin: 0 auto; padding: 0 16px; display:flex; align-items:center; justify-content:space-between; gap: 16px }
+header h1 { margin: 0; font-size: 20px; letter-spacing: 0.4px }
+
+.logo { font-weight:700; font-size:18px }
+.toolbar { display:flex; gap:12px; align-items:center; flex-wrap:wrap }
+nav { margin-bottom: 0 }
+nav a { color: rgba(255,255,255,0.9); text-decoration: none; margin-right: 12px; font-weight:600; padding: 10px 14px; border-radius: 10px; transition: background 180ms ease, color 180ms ease; }
+nav a:hover { background: rgba(255,255,255,0.14); }
+nav a.active { background: #ffffff; color: #0b3d91; box-shadow: inset 0 -4px 0 #0b3d91; }
+.hero { display:flex; gap:16px; align-items:center }
+.hero .balance { background: linear-gradient(180deg,#0b3d91,#0366d6); color:white; padding:14px; border-radius:10px; min-width:160px; text-align:center }
+.hero .balance small { display:block; opacity:0.9 }
+
+main { max-width: 1000px; margin: 28px auto; padding: 0 16px }
+nav { margin-bottom: 18px }
+nav a { color: #cce0ff; text-decoration: none; margin-right: 12px; font-weight:600; padding: 10px 12px; border-radius: 999px; transition: background 180ms ease, color 180ms ease }
+nav a:hover { background: rgba(255,255,255,0.12); }
+nav a.active { background: rgba(255,255,255,0.22); color: white }
+
+.toolbar { display:flex; gap:12px; align-items:center }
+.card { background: white; border-radius:10px; padding:16px; box-shadow: 0 6px 18px rgba(15,20,30,0.06); margin-bottom:16px }
+
+label { display:block; margin:8px 0; font-size:14px }
+input, select, textarea { width:100%; padding:10px; border:1px solid #e3e6ea; border-radius:8px; background: #fff }
+button { margin-top:8px; padding:10px 14px; border-radius:8px; background:#0b3d91; color:white; border:none; cursor:pointer }
+button.secondary { background: #e6eefc; color: #0b3d91 }
+
+.listings { display:grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap:12px }
+.listing { padding:12px; border-radius:8px; background: linear-gradient(180deg,#fff,#fbfdff); border:1px solid #eef2fb }
+.listing h3 { margin:0 0 6px 0; font-size:16px }
+.muted { color:#556; font-size:13px }
+
+.listing:hover { transform: translateY(-6px); box-shadow: 0 18px 30px rgba(10,30,80,0.08); transition: all 220ms cubic-bezier(.2,.8,.2,1) }
+.hero .balance { min-width:200px; box-shadow: 0 8px 18px rgba(3,62,145,0.12) }
+.icon-coin { display:inline-block; vertical-align:middle }
+
+.sparkle { position:relative }
+.sparkle:after { content: '\2728'; position:absolute; top:-8px; right:-6px; font-size:12px; opacity:0.9; transform: rotate(-10deg) }
+
+button { transition: transform 140ms ease, box-shadow 140ms ease }
+button:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(3,62,145,0.12) }
+
+.page-hero { padding: 24px; background: linear-gradient(180deg,#eef6ff,#ffffff); border-radius: 18px; }
+.page-hero h1 { margin-top: 0; }
+.page-hero .hero-copy { max-width: 640px; }
+.summary-cards { display: grid; grid-template-columns: repeat(auto-fit,minmax(190px,1fr)); gap: 16px; margin-top: 18px; }
+.summary-card { background: #fff; border: 1px solid #e8effb; border-radius: 16px; padding: 18px; box-shadow: 0 10px 24px rgba(10,30,80,0.05); }
+.summary-card strong { display:block; font-size: 1.6rem; margin-bottom: 6px; }
+.form-card { padding: 20px; border-radius: 16px; background: linear-gradient(180deg,#fff,#f7f9ff); border: 1px solid #e6ecf6; }
+.form-card h1 { margin-top: 0; }
+.form-card label { margin-bottom: 14px; }
+.form-card input, .form-card textarea { background: #fbfdff; }
+.form-status { margin-top: 14px; color: #334155; }
+.form-actions { display:flex; flex-wrap:wrap; gap:10px; margin-top: 16px; }
+.form-actions button { min-width: 120px; }
+.admin-section { margin-top: 24px }
+.admin-section h2 { margin-bottom: 16px; font-size: 1.2rem; border-bottom: 1px solid #e5ecf9; padding-bottom: 8px }
+.admin-list, .admin-table { list-style:none; padding:0; margin:0 }
+.admin-item { border: 1px solid #eef2fb; border-radius: 14px; background: linear-gradient(180deg,#fff,#fbfdff); padding: 16px; margin-bottom: 12px; box-shadow: 0 10px 20px rgba(15,20,30,0.03); }
+.admin-item-header { display:flex; justify-content:space-between; gap:12px; align-items:flex-start }
+.admin-item-meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; color:#556; font-size:0.95rem }
+.admin-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top: 12px }
+.admin-actions button { min-width: 90px }
+.admin-card { padding:18px; border-radius:16px; box-shadow: 0 16px 30px rgba(15,20,30,0.06); }
+.admin-modal-backdrop, .audit-modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; z-index:80 }
+.admin-modal, .audit-modal { width: min(92vw, 900px); background:white; border-radius:14px; overflow:hidden; }
+.admin-modal-header, .audit-modal-header { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; border-bottom:1px solid #f0f4fb }
+.admin-modal-body, .audit-modal-body { padding: 18px; }
+.admin-modal-body img, .admin-modal-body iframe { width:100%; height:70vh; border:none; border-radius:0 0 14px 14px }
+.admin-modal-body img { object-fit: contain; }
+.admin-meta-row { display:flex; flex-wrap:wrap; gap:12px; margin-top:10px }
+.admin-meta-row > div { min-width: 140px }
+.admin-status-pill { padding: 4px 10px; border-radius: 999px; font-size: 0.85rem; background: #eef4ff; color: #0b3d91; font-weight: 600 }
+.stats ul { list-style:none; padding:0; margin:0 }
+.stats li { padding:6px 0 }
+@media (max-width:800px){ .admin-item-header { flex-direction:column; align-items:flex-start } }
+@media (max-width:600px){ header .container, main { padding: 0 12px } }
